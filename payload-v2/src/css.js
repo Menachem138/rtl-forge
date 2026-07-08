@@ -3,11 +3,16 @@
 /**
  * Core stylesheet for layout-only RTL.
  * Prefer unicode-bidi: plaintext so the first strong character drives each leaf.
+ *
+ * Claude path: semantic tags under html[data-claude-rtl].
+ * Generic Electron apps (Codex/Hermes via CDP): same rules + markdown utility classes
+ * and .ortl-leaf (JS-stamped text leaves such as sidebar spans).
  */
 
 const APPLY_CSS = `
-/* Claude Desktop Official RTL — original layout-only payload */
+/* Claude Official RTL — original layout-only payload (v2) */
 html[data-claude-rtl] .ortl-prose,
+html[data-claude-rtl] .ortl-leaf,
 html[data-claude-rtl] p,
 html[data-claude-rtl] li,
 html[data-claude-rtl] h1,
@@ -21,8 +26,19 @@ html[data-claude-rtl] label,
 html[data-claude-rtl] dt,
 html[data-claude-rtl] dd,
 html[data-claude-rtl] td,
-html[data-claude-rtl] th {
-  unicode-bidi: plaintext;
+html[data-claude-rtl] th,
+html[data-claude-rtl] [class*="markdownText"],
+html[data-claude-rtl] [class*="paragraph"],
+html[data-claude-rtl] [class*="listItem"] {
+  unicode-bidi: plaintext !important;
+  text-align: start !important;
+}
+
+/* Long mixed tokens in RTL bubbles */
+html[data-claude-rtl] p,
+html[data-claude-rtl] li,
+html[data-claude-rtl] .ortl-leaf {
+  overflow-wrap: anywhere;
 }
 
 /* Inline code / paths stay visually LTR islands inside RTL prose */

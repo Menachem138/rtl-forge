@@ -9,10 +9,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="$(cd "$SCRIPT_DIR/../.." && pwd)"
 cd "$SCRIPT_DIR"
 
-echo "manager: building payload (one-time, needs Node)…"
+echo "manager: building payload (one-time, needs Node)..."
 ( cd "$REPO" && node build/build-payload.js >/dev/null )
 
-echo "manager: compiling the Swift app…"
+echo "manager: compiling the Swift app..."
 swift build -c release
 BIN="$(swift build -c release --show-bin-path)/RTLManager"
 [ -f "$BIN" ] || { echo "manager: binary not found at $BIN" >&2; exit 1; }
@@ -23,7 +23,7 @@ rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$RES"
 cp "$BIN" "$APP/Contents/MacOS/RTLManager"
 
-echo "manager: bundling the runtime into Resources (self-contained)…"
+echo "manager: bundling the runtime into Resources (self-contained)..."
 # Preserve the repo layout so manager/core/adapter-control.sh resolves ROOT -> Resources and
 # finds official-runtime/ + dist/payload.js exactly where it expects them.
 mkdir -p "$RES/manager" "$RES/official-runtime" "$RES/dist"

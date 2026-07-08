@@ -15,14 +15,12 @@ function installStyles(doc, cssText) {
   if (!doc || !doc.documentElement) return false;
   if (doc.getElementById(STYLE_ID)) return true;
 
-  // Prefer constructable stylesheets when available
   try {
     if (typeof CSSStyleSheet !== 'undefined' && doc.adoptedStyleSheets) {
       const sheet = new CSSStyleSheet();
       sheet.replaceSync(cssText);
       doc.adoptedStyleSheets = [...doc.adoptedStyleSheets, sheet];
       doc.__claudeRtlSheet = sheet;
-      // also keep a marker element for inject diagnostics that look for style id
       const mark = doc.createElement('style');
       mark.id = STYLE_ID;
       mark.setAttribute('data-ortl-sheet', 'adopted');
@@ -49,16 +47,41 @@ function textOf(el) {
   }
 }
 
+/** Own text only (not descendants) — for leaf span detection in generic apps. */
+function ownText(el) {
+  if (!el || !el.childNodes) return '';
+  let s = '';
+  for (let i = 0; i < el.childNodes.length; i++) {
+    const n = el.childNodes[i];
+    if (n.nodeType === 3) s += n.nodeValue || n.textContent || n.data || '';
+  }
+  // Fallback: pure text host with no element children may only expose textContent
+  if (!s && !hasElementChild(el)) {
+    try { s = el.textContent || ''; } catch { s = ''; }
+  }
+  return s;
+}
+
+function hasElementChild(el) {
+  if (!el || !el.childNodes) return false;
+  for (let i = 0; i < el.childNodes.length; i++) {
+    const n = el.childNodes[i];
+    if (n.nodeType !== 1) continue;
+    const tag = (n.tagName || '').toUpperCase();
+    if (tag === 'BR' || tag === 'WBR') continue;
+    return true;
+  }
+  return false;
+}
+
 function shouldSkipElement(el, surfaces) {
   if (!el || el.nodeType !== 1) return true;
   if (surfaces.isNoTouch(el)) return true;
-  // already stamped with same dir decision
   return false;
 }
 
 function applyDirIfNeeded(el, dir, reason) {
   if (!dir || (dir !== 'rtl' && dir !== 'ltr')) return;
-  // do not fight explicit author dir on the element unless we stamped it
   const prev = el.getAttribute('dir');
   const stamped = el.getAttribute(STAMP_DIR);
   if (prev && !stamped && prev !== dir) return;
@@ -73,13 +96,11 @@ function processProseLeaf(el, detect, surfaces) {
   if (surfaces.isXtermSurface(el)) return;
 
   const text = textOf(el);
-  // CSS plaintext handles most cases; override only when first-strong LTR + majority RTL
   const override = detect.plaintextOverrideDir(text);
   if (override === 'rtl') {
     applyDirIfNeeded(el, 'rtl', 'plaintext-override');
     return;
   }
-  // mark as seen without forcing dir
   if (!el.hasAttribute(STAMP)) el.setAttribute(STAMP, 'prose');
 }
 
@@ -88,7 +109,6 @@ function processListOrQuote(el, detect, surfaces) {
   if (surfaces.closestMatch(el, surfaces.SELECTORS.editableHost)) return;
   const text = textOf(el);
   const dir = detect.resolvedDir(text);
-  // only set rtl when content is actually RTL; ltr decorations default OK
   if (dir === 'rtl') applyDirIfNeeded(el, 'rtl', 'decorated');
   else if (!el.hasAttribute(STAMP)) el.setAttribute(STAMP, 'decorated-ltr');
 }
@@ -103,7 +123,6 @@ function processTable(el, detect, surfaces) {
 }
 
 function processInputChrome(el) {
-  // Only dir=auto for empty-ish chrome; never touch value/text
   if (!el || el.nodeType !== 1) return;
   const tag = (el.tagName || '').toUpperCase();
   if (tag !== 'TEXTAREA' && tag !== 'INPUT') return;
@@ -114,11 +133,43 @@ function processInputChrome(el) {
   }
 }
 
-function processRoot(root, detect, surfaces) {
+/**
+ * Generic-mode only: stamp pure text leaves (span/div with own Hebrew text, no element kids).
+ * Used for Codex sidebar titles and similar Tailwind text leaves — NOT a blanket span flip.
+ */
+function processGenericTextLeaves(root, detect, surfaces) {
+  if (!root || !root.querySelectorAll) return;
+  const nodes = root.querySelectorAll('span, div');
+  for (let i = 0; i < nodes.length; i++) {
+    const el = nodes[i];
+    if (shouldSkipElement(el, surfaces)) continue;
+    if (surfaces.closestMatch(el, surfaces.SELECTORS.editableHost)) continue;
+    if (surfaces.isXtermSurface(el)) continue;
+    if (hasElementChild(el)) continue;
+    const own = ownText(el).trim();
+    if (own.length < 2) continue;
+    // Leaf UI text (sidebar titles, etc.): first-strong RTL is enough — English product
+    // names must not cancel a Hebrew sentence (majority letter count alone is too weak).
+    const first = detect.firstStrongDir(own);
+    const majority = detect.detectBlockDir(own);
+    const override = detect.plaintextOverrideDir(own);
+    const rtl = first === 'rtl' || majority === 'rtl' || override === 'rtl';
+    if (!rtl) continue;
+    try {
+      if (el.classList) el.classList.add('ortl-leaf');
+      else el.setAttribute('class', ((el.getAttribute('class') || '') + ' ortl-leaf').trim());
+    } catch {
+      /* ignore */
+    }
+    el.setAttribute(STAMP, 'leaf-text');
+    applyDirIfNeeded(el, 'rtl', 'leaf-text');
+  }
+}
+
+function processRoot(root, detect, surfaces, generic) {
   if (!root || root.nodeType !== 1) return;
   if (surfaces.isXtermSurface(root)) return;
 
-  // If the observer is scoped into an editor, do nothing but optional input chrome
   if (surfaces.isEditableHost(root)) {
     processInputChrome(root);
     return;
@@ -139,7 +190,8 @@ function processRoot(root, detect, surfaces) {
     processProseLeaf(leaf, detect, surfaces);
   }
 
-  // bare inputs outside xterm
+  if (generic) processGenericTextLeaves(root, detect, surfaces);
+
   const inputs = root.querySelectorAll ? root.querySelectorAll('textarea, input') : [];
   for (const inp of inputs) {
     if (surfaces.isXtermSurface(inp)) continue;
@@ -158,9 +210,8 @@ function createController(doc, deps) {
 
   function scan() {
     const roots = surfaces.getScanRoots(doc, generic);
-    for (const r of roots) processRoot(r, detect, surfaces);
-    // always process body once as safety net in Claude too
-    if (doc.body) processRoot(doc.body, detect, surfaces);
+    for (const r of roots) processRoot(r, detect, surfaces, generic);
+    if (doc.body) processRoot(doc.body, detect, surfaces, generic);
   }
 
   function schedule() {
@@ -175,6 +226,7 @@ function createController(doc, deps) {
     installStyles(doc, cssText);
     doc.documentElement.setAttribute(ROOT_ATTR, 'v2');
     doc.documentElement.setAttribute('data-ortl-payload', PAYLOAD_NAME);
+    if (generic) doc.documentElement.setAttribute('data-ortl-generic', '1');
     scan();
     if (typeof MutationObserver !== 'undefined') {
       observer = new MutationObserver(() => schedule());
@@ -199,7 +251,7 @@ function createController(doc, deps) {
     }
   }
 
-  return { start, dispose, scan, processRoot: (r) => processRoot(r, detect, surfaces) };
+  return { start, dispose, scan, processRoot: (r) => processRoot(r, detect, surfaces, generic) };
 }
 
 // __EXPORTS__
@@ -216,4 +268,7 @@ module.exports = {
   processListOrQuote,
   processTable,
   processInputChrome,
+  processGenericTextLeaves,
+  ownText,
+  hasElementChild,
 };

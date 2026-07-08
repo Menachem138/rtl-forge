@@ -91,6 +91,12 @@ function el(tag, attrs = {}, children = []) {
       node.textContent += c.textContent || '';
     }
   }
+  node.classList = {
+    add(name) {
+      const cur = node.attrs.class || '';
+      if (!cur.split(/\s+/).filter(Boolean).includes(name)) node.attrs.class = (cur + ' ' + name).trim();
+    },
+  };
   return node;
 }
 
@@ -177,4 +183,24 @@ test('installStyles sets style marker', () => {
 test('ROOT_ATTR constant is data-claude-rtl (injector diagnostics)', () => {
   assert.equal(ROOT_ATTR, 'data-claude-rtl');
   assert.equal(STYLE_ID, 'claude-rtl-style');
+});
+
+test('generic mode stamps Hebrew leaf spans without rewriting text', () => {
+  const span = el('span', { class: 'min-w-0 truncate' }, ['הסבר כיצד להשתמש בDirectorsConsole']);
+  const root = el('div', {}, [span]);
+  recomputeText(root);
+  processRoot(root, detect, surfaces, true);
+  assert.equal(span.textContent.includes('הסבר'), true);
+  assert.equal(span.getAttribute('data-ortl'), 'leaf-text');
+  assert.ok((span.attrs.class || '').includes('ortl-leaf'));
+  assert.equal(span.getAttribute('dir'), 'rtl');
+});
+
+test('generic mode does not stamp English-only leaf spans', () => {
+  const span = el('span', {}, ['Hello world product title only']);
+  const root = el('div', {}, [span]);
+  recomputeText(root);
+  processRoot(root, detect, surfaces, true);
+  assert.notEqual(span.getAttribute('data-ortl'), 'leaf-text');
+  assert.notEqual(span.getAttribute('dir'), 'rtl');
 });

@@ -49,12 +49,12 @@ BIN="$APP/Contents/MacOS/$EXEC_NAME"
 [[ -x "$BIN" ]] || { log "executable not found: $BIN"; exit 1; }
 
 # 1) Quit the app (matched by its exact bundle path, so we never touch a different app).
-log "quitting $EXEC_NAME…"
+log "quitting ${EXEC_NAME}..."
 pkill -f "$APP/Contents/MacOS/" 2>/dev/null || true
 for _ in $(seq 1 60); do pgrep -f "$APP/Contents/MacOS/" >/dev/null 2>&1 || break; sleep 0.5; done
 
 # 2) Relaunch with the Chromium remote-debugging endpoint (direct exec passes switches reliably).
-log "relaunching with --remote-debugging-port=$PORT (127.0.0.1)…"
+log "relaunching with --remote-debugging-port=${PORT} (127.0.0.1)..."
 nohup "$BIN" --remote-debugging-port="$PORT" --remote-allow-origins='*' >/dev/null 2>&1 &
 disown 2>/dev/null || true
 
@@ -71,7 +71,7 @@ if [[ -z "$ready" ]]; then
 fi
 
 # 4) Inject the payload into every page/webview target.
-log "injecting payload via CDP…"
+log "injecting payload via CDP..."
 if RTL_CDP_PORT="$PORT" RTL_PAYLOAD="$PAYLOAD" "$NODE" "$INJECTOR"; then
   NEW_PID="$(pgrep -f "$APP/Contents/MacOS/$EXEC_NAME" | head -n 1)"
   if [[ -n "$ADAPTER_ID" ]]; then
