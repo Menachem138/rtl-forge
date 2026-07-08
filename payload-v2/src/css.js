@@ -34,6 +34,25 @@ html[data-claude-rtl] [class*="listItem"] {
   text-align: start !important;
 }
 
+/* Hermes (and similar) hard-set unicode-bidi:isolate + direction:ltr on prose.
+ * In generic mode, beat that on common chat text hosts without flipping chrome. */
+html[data-claude-rtl][data-ortl-generic] p,
+html[data-claude-rtl][data-ortl-generic] li,
+html[data-claude-rtl][data-ortl-generic] [class*="markdown"],
+html[data-claude-rtl][data-ortl-generic] [class*="Markdown"],
+html[data-claude-rtl][data-ortl-generic] [class*="prose"],
+html[data-claude-rtl][data-ortl-generic] [class*="message"] p,
+html[data-claude-rtl][data-ortl-generic] [class*="Message"] p,
+html[data-claude-rtl][data-ortl-generic] .ortl-leaf {
+  unicode-bidi: plaintext !important;
+  text-align: start !important;
+}
+html[data-claude-rtl][data-ortl-generic] [dir="rtl"] {
+  direction: rtl !important;
+  text-align: start !important;
+}
+
+
 /* Long mixed tokens in RTL bubbles */
 html[data-claude-rtl] p,
 html[data-claude-rtl] li,
