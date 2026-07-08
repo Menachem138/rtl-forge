@@ -1,0 +1,16 @@
+{
+  "id": "claude-official-macos",
+  "name": "Claude Desktop",
+  "platform": "macos",
+  "bundleId": "com.anthropic.claudefordesktop",
+  "defaultPath": "/Applications/Claude.app",
+  "status": "supported",
+  "safeRoute": "official-main-process-debugger",
+  "apply": "official-debugger",
+  "teamId": "Q6L2SF6YDW",
+  "notes": [
+    "Verifies Anthropic Team ID before injection.",
+    "Keeps /Applications/Claude.app intact.",
+    "Uses Claude's built-in Developer -> Enable Main Process Debugger path."
+  ]
+}

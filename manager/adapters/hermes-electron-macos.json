@@ -1,0 +1,15 @@
+{
+  "id": "hermes-electron-macos",
+  "name": "Hermes Desktop",
+  "platform": "macos",
+  "bundleId": "com.nousresearch.hermes",
+  "defaultPath": "/Applications/Hermes.app",
+  "status": "supported",
+  "safeRoute": "electron-remote-debugging-cdp",
+  "apply": "electron-cdp",
+  "notes": [
+    "Ad-hoc signed, no hardened runtime, Electron fuses open — the generic CDP adapter injects cleanly.",
+    "RTL is applied at runtime through Chromium remote debugging; nothing on disk is copied, patched, or re-signed.",
+    "Debug port stays open for the session (127.0.0.1, random port). Payload is Claude-tuned, so Hermes coverage is broad but polish is ongoing."
+  ]
+}

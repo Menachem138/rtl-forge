@@ -1,0 +1,19 @@
+{
+  "name": "claude-official-rtl",
+  "version": "0.2.0",
+  "private": true,
+  "description": "RTL for official macOS Claude Desktop via runtime injection — original work by Menachem Samama. No copy/patch/re-sign of Claude.app.",
+  "license": "MIT",
+  "author": "Menachem Samama",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node --test payload-v2/test/*.test.js manager/__tests__/*.test.js",
+    "build": "node payload-v2/build.mjs",
+    "official:launch": "official-runtime/macos/launch-claude-official-rtl.sh",
+    "official:ensure": "official-runtime/macos/ensure-claude-official-rtl.sh --force",
+    "official:watch": "official-runtime/macos/install-watchdog.sh",
+    "official:unwatch": "official-runtime/macos/uninstall-watchdog.sh",
+    "manager:build": "manager/gui/build.sh",
+    "manager:status": "manager/core/app-status.sh"
+  }
+}

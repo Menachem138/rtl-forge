@@ -1,0 +1,18 @@
+{
+  "id": "codex-research-macos",
+  "name": "Codex Desktop",
+  "platform": "macos",
+  "bundleId": "com.openai.codex",
+  "defaultPath": "/Applications/Codex.app",
+  "status": "research",
+  "safeRoute": "electron-remote-debugging-cdp-experimental",
+  "apply": "electron-cdp-experimental",
+  "teamId": "2DC432GLL2",
+  "notes": [
+    "OpenAI-signed, hardened, and notarized — but Electron (Chromium 149) with the node-inspect fuse ON.",
+    "Verified: relaunching with the direct --remote-debugging-port flag DOES open a CDP endpoint (the earlier CODEX_ELECTRON_CHROMIUM_SWITCHES env-var route is a red herring).",
+    "So the same runtime CDP injection works — nothing on disk is copied, patched, or re-signed, and the signature/notarization stay intact.",
+    "With generic mode, Codex's real chat messages (markdown <p> blocks) now render RTL; span-based UI (sidebar titles, some inline) is not yet covered.",
+    "Kept experimental and opt-in: it relaunches OpenAI's signed app with a debug port. Not marketed as supported."
+  ]
+}

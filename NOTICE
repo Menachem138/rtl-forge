@@ -1,0 +1,21 @@
+Claude Official RTL
+===================
+
+Copyright (c) 2026 Menachem Samama
+
+All product code in this repository is original work for this project:
+
+- official-runtime/   macOS injection into Anthropic-signed Claude Desktop
+- manager/            menu-bar control panel + adapter inventory
+- payload-v2/         layout-only in-page RTL engine (CSS + dir; no text rewrites)
+- docs/               product documentation for this repository
+
+This repository does NOT contain, vendor, or build from third-party RTL engine
+trees such as engine/, dom/, browser/, desktop/, gui/helper patch pipelines from
+other open-source Claude RTL projects.
+
+Historical note (context only, not code in this repo):
+Early experiments on the author's machine temporarily used a third-party MIT
+engine for prototyping while discovering that copy/re-sign approaches break
+Claude Desktop account surfaces. The product path here is a different
+architecture (runtime inject into the official app) with an original payload.
