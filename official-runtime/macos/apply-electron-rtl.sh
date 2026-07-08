@@ -48,10 +48,21 @@ EXEC_NAME="$(defaults read "$APP/Contents/Info" CFBundleExecutable 2>/dev/null |
 BIN="$APP/Contents/MacOS/$EXEC_NAME"
 [[ -x "$BIN" ]] || { log "executable not found: $BIN"; exit 1; }
 
-# 1) Quit the app (matched by its exact bundle path, so we never touch a different app).
+# 1) Quit the app (matched by its exact bundle path). Also clear same-named
+# helpers/orphans so Electron single-instance cannot hand off to a non-debug process.
 log "quitting ${EXEC_NAME}..."
 pkill -f "$APP/Contents/MacOS/" 2>/dev/null || true
-for _ in $(seq 1 60); do pgrep -f "$APP/Contents/MacOS/" >/dev/null 2>&1 || break; sleep 0.5; done
+pkill -f "$APP/Contents/Frameworks/" 2>/dev/null || true
+# Hermes (and similar) may leave sibling installs running under other paths — kill by executable name last.
+if [[ "$EXEC_NAME" == "Hermes" ]]; then
+  pkill -f '/MacOS/Hermes$' 2>/dev/null || true
+  pkill -f 'Hermes Helper' 2>/dev/null || true
+fi
+for _ in $(seq 1 60); do
+  pgrep -f "$APP/Contents/MacOS/" >/dev/null 2>&1 || break
+  sleep 0.5
+done
+sleep 1
 
 # 2) Relaunch with the Chromium remote-debugging endpoint (direct exec passes switches reliably).
 log "relaunching with --remote-debugging-port=${PORT} (127.0.0.1)..."

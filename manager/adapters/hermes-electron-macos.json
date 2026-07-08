@@ -8,8 +8,8 @@
   "safeRoute": "electron-remote-debugging-cdp",
   "apply": "electron-cdp",
   "notes": [
-    "Ad-hoc signed, no hardened runtime, Electron fuses open — the generic CDP adapter injects cleanly.",
-    "RTL is applied at runtime through Chromium remote debugging; nothing on disk is copied, patched, or re-signed.",
-    "Debug port stays open for the session (127.0.0.1, random port). Payload is Claude-tuned, so Hermes coverage is broad but polish is ongoing."
+    "Ad-hoc signed Electron app. Generic CDP inject of payload-v2 works when ALL Hermes instances are quit first.",
+    "Multiple installs (Applications, backup, ~/.hermes/release) can steal single-instance launch and drop the debug port \u2014 apply kills Hermes helpers aggressively.",
+    "RTL is runtime-only: no copy/patch/re-sign. Debug port stays on 127.0.0.1 for the session."
   ]
 }
