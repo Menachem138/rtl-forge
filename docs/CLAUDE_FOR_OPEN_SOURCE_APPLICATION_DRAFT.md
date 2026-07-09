@@ -4,18 +4,17 @@ Official program page: https://claude.com/contact-sales/claude-for-oss
 
 ## Project
 
-Desktop RTL Runtime (Claude + Codex)
+RTL Forge
 
 ## Repository URL
 
-`https://github.com/Menachem138/rtl-forge`  
-*(fill exact URL after first push)*
+`https://github.com/Menachem138/rtl-forge`
 
-**Framing for reviewers:** original macOS **runtime injection** product for the official Anthropic-signed Claude Desktop app, with an original layout-only RTL payload (`payload-v2`). The novel contribution is preserving signed-app identity (subscription, Cowork, Claude Code) while making Hebrew/Arabic/Persian readable — without copy/patch/re-sign.
+**Framing for reviewers:** original macOS **runtime injection** product for the official Anthropic-signed Claude Desktop app, with an original layout-only RTL payload (`payload-v2`). The novel contribution is preserving signed-app identity (subscription, Cowork, Claude Code) while making Hebrew/Arabic/Persian readable — without copy/patch/re-sign. Also supports OpenAI Codex Desktop via the same approach.
 
 ## Tell Us About The Project's Reach And Impact
 
-Desktop RTL Runtime (Claude + Codex) solves a daily accessibility gap for RTL users of Claude Desktop (Hebrew, Arabic, Persian).
+RTL Forge solves a daily accessibility gap for RTL users of Claude Desktop and Codex Desktop (Hebrew, Arabic, Persian).
 
 Claude can generate high-quality RTL text, but the Desktop app often renders mixed RTL/LTR content poorly: wrong-side list markers, jumped punctuation, hard-to-scan tables, tiring mixed technical answers.
 

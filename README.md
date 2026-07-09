@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="RTL Forge — Runtime RTL for official desktop AI apps" width="100%"/>
+  <img src="assets/banner-hf.png" alt="RTL Forge — Runtime RTL for official desktop AI apps" width="100%"/>
 </p>
 
 <hr/>
@@ -113,5 +113,5 @@ This project was submitted for the [Claude for Open Source](https://claude.com/c
 MIT © Menachem Samama — [LICENSE](LICENSE) · [NOTICE](NOTICE)
 
 <p align="center">
-  <img src="assets/logo.svg" alt="RTL Forge logo" width="96"/>
+  <img src="assets/logo-hf.png" alt="RTL Forge logo" width="120"/>
 </p>
