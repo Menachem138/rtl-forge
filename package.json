@@ -2,17 +2,17 @@
   "name": "claude-official-rtl",
   "version": "0.2.0",
   "private": false,
-  "description": "RTL for official macOS Claude Desktop via runtime injection — original work by Menachem Samama. No copy/patch/re-sign of Claude.app.",
+  "description": "RTL for official macOS Claude Desktop via runtime injection \u2014 original work by Menachem Samama. No copy/patch/re-sign of Claude.app.",
   "license": "MIT",
   "author": "Menachem Samama",
   "repository": {
     "type": "git",
-    "url": "https://github.com/menachemsamama/claude-official-rtl.git"
+    "url": "https://github.com/Menachem138/claude-official-rtl.git"
   },
   "bugs": {
-    "url": "https://github.com/menachemsamama/claude-official-rtl/issues"
+    "url": "https://github.com/Menachem138/claude-official-rtl/issues"
   },
-  "homepage": "https://github.com/menachemsamama/claude-official-rtl#readme",
+  "homepage": "https://github.com/Menachem138/claude-official-rtl#readme",
   "type": "commonjs",
   "scripts": {
     "test": "node --test payload-v2/test/*.test.js manager/__tests__/*.test.js",

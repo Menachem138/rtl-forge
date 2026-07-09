@@ -8,7 +8,7 @@ Claude Official RTL
 
 ## Repository URL
 
-`https://github.com/menachemsamama/claude-official-rtl`  
+`https://github.com/Menachem138/claude-official-rtl`  
 *(fill exact URL after first push)*
 
 **Framing for reviewers:** original macOS **runtime injection** product for the official Anthropic-signed Claude Desktop app, with an original layout-only RTL payload (`payload-v2`). The novel contribution is preserving signed-app identity (subscription, Cowork, Claude Code) while making Hebrew/Arabic/Persian readable — without copy/patch/re-sign.

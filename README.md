@@ -32,7 +32,7 @@ Common workarounds build a **copied** `Claude-RTL.app` and re-sign it. On macOS 
 ## Quick start (Claude)
 
 ```bash
-git clone https://github.com/menachemsamama/claude-official-rtl.git
+git clone https://github.com/Menachem138/claude-official-rtl.git
 cd claude-official-rtl
 npm test
 npm run build

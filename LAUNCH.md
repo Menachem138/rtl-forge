@@ -36,7 +36,7 @@ gh auth status
 
 ```bash
 cd ~/clawd/projects/claude-official-rtl
-gh repo create menachemsamama/claude-official-rtl \
+gh repo create Menachem138/claude-official-rtl \
   --public \
   --source=. \
   --remote=origin \
@@ -47,7 +47,7 @@ gh repo create menachemsamama/claude-official-rtl \
 If the repo already exists empty on GitHub:
 
 ```bash
-git remote add origin https://github.com/menachemsamama/claude-official-rtl.git
+git remote add origin https://github.com/Menachem138/claude-official-rtl.git
 git push -u origin main
 ```
 
