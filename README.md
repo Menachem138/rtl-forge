@@ -1,45 +1,52 @@
 # Claude Official RTL
 
 **Author:** Menachem Samama  
-**License:** MIT
+**License:** MIT  
+**Platform:** macOS
 
 Right-to-left Hebrew, Arabic, and Persian for the **official macOS Claude Desktop app** — without copying, patching, unpacking, or re-signing Claude.
 
-This keeps Anthropic’s signed app identity, so subscription state, chat history, Cowork, and Claude Code surfaces keep working.
+That preserves Anthropic’s signed app identity: subscription, chat history, Cowork, and Claude Code keep working.
 
-> Hebrew: [docs/README.he-official-runtime.md](docs/README.he-official-runtime.md)  
-> Ownership (for humans + AI agents): [docs/OWNERSHIP.md](docs/OWNERSHIP.md)
+> עברית: [docs/README.he-official-runtime.md](docs/README.he-official-runtime.md)
 
-## What this project is
+## Why this exists
 
-| Layer | Path | Notes |
-|---|---|---|
-| Official runtime | `official-runtime/` | Inject into `/Applications/Claude.app` via Claude’s own Developer debugger |
-| Control panel | `manager/` | Menu-bar status / apply / verify / watchdog helpers |
-| In-page RTL engine | `payload-v2/` | **Original layout-only** engine (CSS + selective `dir`) |
+Claude writes excellent Hebrew/Arabic, but Claude Desktop often renders RTL poorly (punctuation, lists, tables, mixed text).
 
-## What this project is not
+Common workarounds build a **copied** `Claude-RTL.app` and re-sign it. On macOS that can break Keychain / Team-ID-bound features (subscription, Cowork, Claude Code).
 
-- Not a rebrand of someone else’s `engine/` + `dom/` tree  
-- Not the classic `Claude-RTL.app` copy + ad-hoc re-sign approach  
-- **`dom/` is not part of this repository** and is not Menachem’s product code  
+**This project takes the runtime route:** keep `/Applications/Claude.app` intact and inject a local RTL payload.
 
-## Quick start
+## Status
+
+| Surface | Status |
+|---|---|
+| Claude Desktop (macOS, official signed app) | **Supported** |
+| Claude chat + history + subscription | **Supported** |
+| Cowork | **Supported** |
+| Claude Code terminal | **Supported with care** (terminal stays LTR) |
+| Codex Desktop | **Experimental** (opt-in CDP relaunch) |
+| Hermes Desktop | **Later / research** (prefer source-level fix) |
+
+## Quick start (Claude)
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/claude-official-rtl.git
+git clone https://github.com/menachemsamama/claude-official-rtl.git
 cd claude-official-rtl
 npm test
 npm run build
-official-runtime/macos/launch-claude-official-rtl.sh
-official-runtime/macos/install-watchdog.sh
+npm run official:launch
+npm run official:watch   # optional: re-apply after Claude relaunch/update
 ```
 
-Grant Accessibility once if macOS blocks the Developer menu click:
+Grant **Accessibility** once if macOS blocks the Developer menu click:
 
 ```text
 System Settings → Privacy & Security → Accessibility
 ```
+
+Enable Terminal / your runner / `bash` (for the watchdog).
 
 ## How it works
 
@@ -47,7 +54,7 @@ System Settings → Privacy & Security → Accessibility
 2. Enable Claude’s Developer menu
 3. Open `Developer → Enable Main Process Debugger`
 4. Connect to local Node inspector `127.0.0.1:9229`
-5. Inject `dist/payload.js` (from `payload-v2`) into Claude webContents/frames
+5. Inject `dist/payload.js` (built from `payload-v2/`) into Claude frames
 6. Close the inspector
 
 Details: [official-runtime/macos/README.md](official-runtime/macos/README.md)
@@ -55,24 +62,41 @@ Details: [official-runtime/macos/README.md](official-runtime/macos/README.md)
 ## Why Chrome may open briefly
 
 Chrome can notice Electron’s temporary local inspector and open `chrome://inspect`.  
-That is not an extension and not telemetry. The injector closes the inspector after use.
+Not an extension, not telemetry. Loopback only; closed after inject.
 
-## payload-v2 design
+## Security model
 
-- Primary prose direction: CSS `unicode-bidi: plaintext`
-- Selective `dir` for tables / lists / blockquotes / rare plaintext overrides
-- **Never mutates text nodes**
-- **Never injects** U+200E / U+200F
-- Hard no-touch: ProseMirror composers, xterm / Claude Code terminal
+- Verifies Anthropic Team ID before inject  
+- Does **not** modify `/Applications/Claude.app`  
+- Does **not** copy or re-sign Claude  
+- No network exfiltration of chat content  
+- Local loopback only  
+- Inspector closed after injection by default  
+
+## payload-v2 (original engine)
+
+- CSS `unicode-bidi: plaintext` as primary prose direction  
+- Selective `dir` for tables / lists / blockquotes / overrides  
+- **Never mutates text nodes**  
+- **Never injects** U+200E / U+200F  
+- Hard no-touch: composers + xterm / Claude Code terminal  
 
 Contract: [payload-v2/CONTRACT.md](payload-v2/CONTRACT.md)
 
+## Project layout
+
+```text
+official-runtime/   # Claude signed-app runtime inject + watchdog
+payload-v2/         # original layout-only RTL payload
+manager/            # menu-bar helpers + adapter inventory
+docs/               # architecture notes, Hebrew guide, OSS draft
+```
+
 ## Other apps
 
-Conservative adapter inventory (Claude supported; Hermes/Codex documented carefully):
-
-- [docs/APP_ADAPTERS.md](docs/APP_ADAPTERS.md)
-- `manager/core/app-status.sh`
+- Codex: [docs/CODEX.md](docs/CODEX.md) — `npm run codex:apply` (experimental)  
+- Hermes: [docs/HERMES.md](docs/HERMES.md) — deferred; multi-install + CSS conflicts  
+- Adapters overview: [docs/APP_ADAPTERS.md](docs/APP_ADAPTERS.md)
 
 ## Development
 
@@ -82,6 +106,10 @@ npm run build
 npm run official:ensure
 ```
 
+## Claude for Open Source
+
+Draft application answers: [docs/CLAUDE_FOR_OPEN_SOURCE_APPLICATION_DRAFT.md](docs/CLAUDE_FOR_OPEN_SOURCE_APPLICATION_DRAFT.md)
+
 ## License
 
-MIT © Menachem Samama — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
+MIT © Menachem Samama — [LICENSE](LICENSE) · [NOTICE](NOTICE)

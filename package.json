@@ -1,10 +1,18 @@
 {
   "name": "claude-official-rtl",
   "version": "0.2.0",
-  "private": true,
-  "description": "RTL for official macOS Claude Desktop via runtime injection \u2014 original work by Menachem Samama. No copy/patch/re-sign of Claude.app.",
+  "private": false,
+  "description": "RTL for official macOS Claude Desktop via runtime injection — original work by Menachem Samama. No copy/patch/re-sign of Claude.app.",
   "license": "MIT",
   "author": "Menachem Samama",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/menachemsamama/claude-official-rtl.git"
+  },
+  "bugs": {
+    "url": "https://github.com/menachemsamama/claude-official-rtl/issues"
+  },
+  "homepage": "https://github.com/menachemsamama/claude-official-rtl#readme",
   "type": "commonjs",
   "scripts": {
     "test": "node --test payload-v2/test/*.test.js manager/__tests__/*.test.js",
@@ -17,5 +25,17 @@
     "manager:status": "manager/core/app-status.sh",
     "codex:apply": "official-runtime/macos/apply-electron-rtl.sh /Applications/Codex.app auto codex-research-macos",
     "hermes:apply": "official-runtime/macos/apply-electron-rtl.sh /Applications/Hermes.app auto hermes-electron-macos"
-  }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "claude",
+    "rtl",
+    "hebrew",
+    "arabic",
+    "macos",
+    "accessibility",
+    "electron"
+  ]
 }
