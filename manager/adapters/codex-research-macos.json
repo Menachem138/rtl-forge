@@ -4,14 +4,14 @@
   "platform": "macos",
   "bundleId": "com.openai.codex",
   "defaultPath": "/Applications/Codex.app",
-  "status": "research",
-  "safeRoute": "electron-remote-debugging-cdp-experimental",
-  "apply": "electron-cdp-experimental",
+  "status": "supported",
+  "safeRoute": "electron-remote-debugging-cdp",
+  "apply": "electron-cdp",
   "teamId": "2DC432GLL2",
   "notes": [
-    "OpenAI-signed, hardened, and notarized \u2014 Electron with node-inspect fuse ON.",
-    "Apply route: relaunch with --remote-debugging-port + CDP inject of payload-v2 (generic mode). No copy/patch/re-sign.",
-    "payload-v2 generic mode: body root + plaintext on p/li/markdown classes + careful Hebrew leaf span stamping (.ortl-leaf).",
-    "Experimental/opt-in: debug port stays open on 127.0.0.1 for the session. Not marketed as fully supported."
+    "Breakthrough path: relaunch OpenAI's signed Codex with --remote-debugging-port and inject payload-v2 in generic mode — no copy/patch/re-sign.",
+    "Verified live: Hebrew chat markdown paragraphs + sidebar leaf titles render RTL (unicode-bidi plaintext / dir=rtl).",
+    "Opt-in: apply relaunches Codex and keeps a local debug port on 127.0.0.1 for the session.",
+    "Signature and notarization stay intact (runtime inject only)."
   ]
 }

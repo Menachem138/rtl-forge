@@ -1,18 +1,18 @@
 {
-  "name": "claude-official-rtl",
+  "name": "desktop-rtl-runtime",
   "version": "0.2.0",
   "private": false,
-  "description": "RTL for official macOS Claude Desktop via runtime injection \u2014 original work by Menachem Samama. No copy/patch/re-sign of Claude.app.",
+  "description": "RTL runtime for official Claude Desktop + Codex on macOS \u2014 no copy/patch/re-sign. Original work by Menachem Samama.",
   "license": "MIT",
   "author": "Menachem Samama",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Menachem138/claude-official-rtl.git"
+    "url": "https://github.com/Menachem138/desktop-rtl-runtime.git"
   },
   "bugs": {
-    "url": "https://github.com/Menachem138/claude-official-rtl/issues"
+    "url": "https://github.com/Menachem138/desktop-rtl-runtime/issues"
   },
-  "homepage": "https://github.com/Menachem138/claude-official-rtl#readme",
+  "homepage": "https://github.com/Menachem138/desktop-rtl-runtime#readme",
   "type": "commonjs",
   "scripts": {
     "test": "node --test payload-v2/test/*.test.js manager/__tests__/*.test.js",
@@ -31,6 +31,7 @@
   },
   "keywords": [
     "claude",
+    "codex",
     "rtl",
     "hebrew",
     "arabic",

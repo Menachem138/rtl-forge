@@ -1,20 +1,24 @@
-# Codex Desktop RTL (experimental)
+# Codex Desktop RTL — supported (opt-in)
 
-## How it works
+## Breakthrough
+
+Codex Desktop is OpenAI-signed / hardened. There is no Claude-style “Developer → Main Process Debugger” menu.
+
+Verified approach:
 
 1. Relaunch `/Applications/Codex.app` with `--remote-debugging-port=<random>` on `127.0.0.1`
-2. Inject `dist/payload.js` (payload-v2) with `window.__CLAUDE_RTL_GENERIC__=true`
+2. Inject `payload-v2` with `window.__CLAUDE_RTL_GENERIC__=true`
 3. Generic mode:
-   - scans from `<body>`
-   - CSS `unicode-bidi: plaintext` on `p` / markdown utility classes
-   - careful Hebrew **leaf** `span`/`div` stamping (`.ortl-leaf`) — not a blanket span flip
+   - scan from `<body>`
+   - plaintext CSS on markdown paragraphs
+   - careful Hebrew leaf `span` stamping for sidebar titles
 
-No copy, asar edit, or re-sign of Codex.
+**No copy, asar edit, or re-sign.** OpenAI signature stays.
 
 ## Apply
 
 ```bash
-cd ~/clawd/projects/claude-official-rtl
+cd ~/clawd/projects/claude-official-rtl   # or desktop-rtl-runtime after rename
 npm run build
 npm run codex:apply
 ```
@@ -26,13 +30,15 @@ manager/core/adapter-control.sh reapply codex-research-macos
 manager/core/adapter-control.sh verify codex-research-macos
 ```
 
-## Status
+## Live verification (author machine)
 
-- Adapter id: `codex-research-macos`
-- Status: **research / experimental** (opt-in)
-- Verified live: Hebrew sidebar titles get `dir=rtl` + plaintext; chat markdown `<p>` covered by global prose CSS
+- `applied=ok`
+- Hebrew sidebar titles: `dir=rtl`, `unicode-bidi: plaintext`
+- Chat markdown `<p class="_markdownText…">` covered by prose CSS
+- Adapter state: `rtl=active`
 
-## Notes
+## User expectations
 
-- Debug port stays open for the Codex session (unlike Claude’s transient debugger).
-- OpenAI signature/Team ID remain intact.
+- Apply **relaunches** Codex (save work first)
+- A **local** debug port stays open for that session
+- Prefer this over any “patch Codex.app” guide

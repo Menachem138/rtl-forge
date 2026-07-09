@@ -1,102 +1,102 @@
-# Claude Official RTL
+<p align="center">
+  <img src="assets/banner.svg" alt="Desktop RTL Runtime — Claude Desktop + Codex" width="100%"/>
+</p>
 
-**Author:** Menachem Samama  
-**License:** MIT  
-**Platform:** macOS
+# Desktop RTL Runtime
 
-Right-to-left Hebrew, Arabic, and Persian for the **official macOS Claude Desktop app** — without copying, patching, unpacking, or re-signing Claude.
+**Author:** Menachem Samama · **License:** MIT · **Platform:** macOS
 
-That preserves Anthropic’s signed app identity: subscription, chat history, Cowork, and Claude Code keep working.
+Right-to-left Hebrew, Arabic, and Persian for **official desktop AI apps** — without copying, patching, unpacking, or re-signing them.
+
+| App | How | Status |
+|---|---|---|
+| **Claude Desktop** | Official Anthropic-signed app · Developer-debugger runtime inject | **Supported** |
+| **Codex Desktop** | Official OpenAI-signed app · opt-in CDP runtime inject | **Supported** |
+| Hermes Desktop | Prefer source-level fix | Later / research |
 
 > עברית: [docs/README.he-official-runtime.md](docs/README.he-official-runtime.md)
 
-## Why this exists
+## Why this is a breakthrough
 
-Claude writes excellent Hebrew/Arabic, but Claude Desktop often renders RTL poorly (punctuation, lists, tables, mixed text).
+Most RTL “fixes” for desktop AI clients:
 
-Common workarounds build a **copied** `Claude-RTL.app` and re-sign it. On macOS that can break Keychain / Team-ID-bound features (subscription, Cowork, Claude Code).
+1. **Copy** the app → `Something-RTL.app`
+2. Patch asar / inject files
+3. **Re-sign** ad-hoc
 
-**This project takes the runtime route:** keep `/Applications/Claude.app` intact and inject a local RTL payload.
+On macOS that often breaks Team-ID / Keychain identity (subscription, Cowork, account surfaces).
 
-## Status
+This project keeps the **real signed apps** and applies RTL at **runtime**:
 
-| Surface | Status |
-|---|---|
-| Claude Desktop (macOS, official signed app) | **Supported** |
-| Claude chat + history + subscription | **Supported** |
-| Cowork | **Supported** |
-| Claude Code terminal | **Supported with care** (terminal stays LTR) |
-| Codex Desktop | **Experimental** (opt-in CDP relaunch) |
-| Hermes Desktop | **Later / research** (prefer source-level fix) |
+- **Claude:** temporary main-process debugger → inject payload → close inspector  
+- **Codex:** relaunch with local Chromium debug port → inject **generic** payload-v2 → no re-sign  
 
-## Quick start (Claude)
+Codex is not a “maybe someday” idea: live verification showed Hebrew chat markdown + sidebar titles flipping RTL with the official signed binary intact.
+
+## Quick start — Claude
 
 ```bash
-git clone https://github.com/Menachem138/claude-official-rtl.git
-cd claude-official-rtl
+git clone https://github.com/Menachem138/desktop-rtl-runtime.git
+cd desktop-rtl-runtime
 npm test
 npm run build
 npm run official:launch
-npm run official:watch   # optional: re-apply after Claude relaunch/update
+npm run official:watch   # optional re-apply after Claude relaunch/update
 ```
 
-Grant **Accessibility** once if macOS blocks the Developer menu click:
+Grant Accessibility once if needed:
 
 ```text
 System Settings → Privacy & Security → Accessibility
 ```
 
-Enable Terminal / your runner / `bash` (for the watchdog).
+## Quick start — Codex
 
-## How it works
+```bash
+npm run build
+npm run codex:apply
+```
 
-1. Verify Claude is signed by Anthropic Team ID `Q6L2SF6YDW`
-2. Enable Claude’s Developer menu
-3. Open `Developer → Enable Main Process Debugger`
-4. Connect to local Node inspector `127.0.0.1:9229`
-5. Inject `dist/payload.js` (built from `payload-v2/`) into Claude frames
-6. Close the inspector
+This **relaunches** Codex with a local debug port (`127.0.0.1`) for the session, then injects the same `payload-v2` in generic mode. Signature stays OpenAI’s.
 
-Details: [official-runtime/macos/README.md](official-runtime/macos/README.md)
+Details: [docs/CODEX.md](docs/CODEX.md)
 
-## Why Chrome may open briefly
+## How Claude inject works
 
-Chrome can notice Electron’s temporary local inspector and open `chrome://inspect`.  
-Not an extension, not telemetry. Loopback only; closed after inject.
+1. Verify Team ID `Q6L2SF6YDW`
+2. Enable Developer menu
+3. `Developer → Enable Main Process Debugger`
+4. Connect `127.0.0.1:9229`
+5. Inject `dist/payload.js` from `payload-v2/`
+6. Close inspector
 
 ## Security model
 
-- Verifies Anthropic Team ID before inject  
-- Does **not** modify `/Applications/Claude.app`  
-- Does **not** copy or re-sign Claude  
-- No network exfiltration of chat content  
-- Local loopback only  
-- Inspector closed after injection by default  
+- No modification of Claude.app / Codex.app on disk  
+- No re-sign  
+- Loopback only  
+- No chat telemetry  
+- Inspectors closed after Claude inject (Codex keeps session debug port by design — local only)  
 
-## payload-v2 (original engine)
+See [SECURITY.md](SECURITY.md) · [docs/IP_AND_PROTECTION.md](docs/IP_AND_PROTECTION.md)
 
-- CSS `unicode-bidi: plaintext` as primary prose direction  
-- Selective `dir` for tables / lists / blockquotes / overrides  
+## payload-v2 (original)
+
+- CSS `unicode-bidi: plaintext`  
+- Selective `dir`  
 - **Never mutates text nodes**  
-- **Never injects** U+200E / U+200F  
-- Hard no-touch: composers + xterm / Claude Code terminal  
-
-Contract: [payload-v2/CONTRACT.md](payload-v2/CONTRACT.md)
+- No U+200E/U+200F  
+- Composer + xterm hard no-touch  
 
 ## Project layout
 
 ```text
-official-runtime/   # Claude signed-app runtime inject + watchdog
-payload-v2/         # original layout-only RTL payload
-manager/            # menu-bar helpers + adapter inventory
-docs/               # architecture notes, Hebrew guide, OSS draft
+assets/             # banner + logo
+official-runtime/   # Claude + generic Electron injectors
+payload-v2/         # original layout-only engine
+manager/            # adapters + control helpers
+docs/               # guides, IP notes, OSS draft
 ```
-
-## Other apps
-
-- Codex: [docs/CODEX.md](docs/CODEX.md) — `npm run codex:apply` (experimental)  
-- Hermes: [docs/HERMES.md](docs/HERMES.md) — deferred; multi-install + CSS conflicts  
-- Adapters overview: [docs/APP_ADAPTERS.md](docs/APP_ADAPTERS.md)
 
 ## Development
 
@@ -104,12 +104,17 @@ docs/               # architecture notes, Hebrew guide, OSS draft
 npm test
 npm run build
 npm run official:ensure
+npm run codex:apply
 ```
 
 ## Claude for Open Source
 
-Draft application answers: [docs/CLAUDE_FOR_OPEN_SOURCE_APPLICATION_DRAFT.md](docs/CLAUDE_FOR_OPEN_SOURCE_APPLICATION_DRAFT.md)
+[docs/CLAUDE_FOR_OPEN_SOURCE_APPLICATION_DRAFT.md](docs/CLAUDE_FOR_OPEN_SOURCE_APPLICATION_DRAFT.md)
 
 ## License
 
 MIT © Menachem Samama — [LICENSE](LICENSE) · [NOTICE](NOTICE)
+
+<p align="center">
+  <img src="assets/logo.svg" alt="RTL logo" width="96"/>
+</p>

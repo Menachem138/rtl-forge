@@ -4,18 +4,18 @@ Official program page: https://claude.com/contact-sales/claude-for-oss
 
 ## Project
 
-Claude Official RTL
+Desktop RTL Runtime (Claude + Codex)
 
 ## Repository URL
 
-`https://github.com/Menachem138/claude-official-rtl`  
+`https://github.com/Menachem138/desktop-rtl-runtime`  
 *(fill exact URL after first push)*
 
 **Framing for reviewers:** original macOS **runtime injection** product for the official Anthropic-signed Claude Desktop app, with an original layout-only RTL payload (`payload-v2`). The novel contribution is preserving signed-app identity (subscription, Cowork, Claude Code) while making Hebrew/Arabic/Persian readable — without copy/patch/re-sign.
 
 ## Tell Us About The Project's Reach And Impact
 
-Claude Official RTL solves a daily accessibility gap for RTL users of Claude Desktop (Hebrew, Arabic, Persian).
+Desktop RTL Runtime (Claude + Codex) solves a daily accessibility gap for RTL users of Claude Desktop (Hebrew, Arabic, Persian).
 
 Claude can generate high-quality RTL text, but the Desktop app often renders mixed RTL/LTR content poorly: wrong-side list markers, jumped punctuation, hard-to-scan tables, tiring mixed technical answers.
 
@@ -31,7 +31,7 @@ This project keeps `/Applications/Claude.app` intact and injects a local RTL pay
 
 The project fills a specific ecosystem gap: RTL users need Claude Desktop to be readable **without losing official app identity**.
 
-Optional experimental path for other Electron apps (e.g. Codex) exists and is documented as opt-in/research — Claude remains the supported flagship.
+Also ships a verified runtime path for OpenAI Codex Desktop (opt-in relaunch + CDP inject, no re-sign) — Hebrew chat + sidebar titles verified live.
 
 ## How Will You Use The Subscription For Your Project?
 

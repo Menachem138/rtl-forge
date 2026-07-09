@@ -50,9 +50,11 @@ test('adapters: every supported adapter has a non-experimental apply route', () 
   }
 });
 
-test('adapters: Codex stays research-only and its apply route is gated experimental', () => {
+test('adapters: Codex is supported via opt-in Electron CDP (no re-sign)', () => {
   const codex = allAdapters().find((a) => a.id === 'codex-research-macos');
-  assert.strictEqual(codex.status, 'research', 'Codex must not be marketed as supported');
-  assert.strictEqual(codex.apply, 'electron-cdp-experimental',
-    'if Codex is injectable at all, it must be through the gated experimental route');
+  assert.ok(codex, 'the Codex adapter must exist');
+  assert.strictEqual(codex.status, 'supported', 'Codex desktop RTL is a first-class supported path');
+  assert.strictEqual(codex.apply, 'electron-cdp',
+    'Codex should use the standard electron-cdp apply route (still opt-in relaunch)');
+  assert.strictEqual(codex.teamId, '2DC432GLL2');
 });
