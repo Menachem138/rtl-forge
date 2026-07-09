@@ -1,101 +1,98 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="Desktop RTL Runtime — Claude Desktop + Codex" width="100%"/>
+  <img src="assets/banner.svg" alt="RTL Forge — Runtime RTL for official desktop AI apps" width="100%"/>
 </p>
 
-# Desktop RTL Runtime
+<hr/>
 
-**Author:** Menachem Samama · **License:** MIT · **Platform:** macOS
+<p align="center">
+  <strong>Runtime RTL for Claude Desktop + Codex on macOS.</strong><br/>
+  Official apps. Signatures intact. No copy, no patch, no re-sign.
+</p>
 
-Right-to-left Hebrew, Arabic, and Persian for **official desktop AI apps** — without copying, patching, unpacking, or re-signing them.
+<p align="center">
+  <a href="docs/README.he-official-runtime.md">עברית</a> ·
+  <a href="docs/CODEX.md">Codex guide</a> ·
+  <a href="docs/CLAUDE_FOR_OPEN_SOURCE_APPLICATION_DRAFT.md">OSS application</a> ·
+  <a href="docs/OWNERSHIP.md">Ownership</a>
+</p>
 
-| App | How | Status |
-|---|---|---|
-| **Claude Desktop** | Official Anthropic-signed app · Developer-debugger runtime inject | **Supported** |
-| **Codex Desktop** | Official OpenAI-signed app · opt-in CDP runtime inject | **Supported** |
-| Hermes Desktop | Prefer source-level fix | Later / research |
+<hr/>
 
-> עברית: [docs/README.he-official-runtime.md](docs/README.he-official-runtime.md)
+## Status
 
-## Why this is a breakthrough
+| App | Signature | Method | Status |
+|---|---|---|---|
+| **Claude Desktop** macOS | Anthropic `Q6L2SF6YDW` | Transient Developer-debugger runtime inject | ✅ Supported |
+| **Codex Desktop** macOS | OpenAI `2DC432GLL2` | Opt‑in relaunch + CDP runtime inject | ✅ Supported |
+| Hermes Desktop macOS | ad‑hoc | Deferred — prefer source‑level fix | 🔮 Research |
 
-Most RTL “fixes” for desktop AI clients:
-
-1. **Copy** the app → `Something-RTL.app`
-2. Patch asar / inject files
-3. **Re-sign** ad-hoc
-
-On macOS that often breaks Team-ID / Keychain identity (subscription, Cowork, account surfaces).
-
-This project keeps the **real signed apps** and applies RTL at **runtime**:
-
-- **Claude:** temporary main-process debugger → inject payload → close inspector  
-- **Codex:** relaunch with local Chromium debug port → inject **generic** payload-v2 → no re-sign  
-
-Codex is not a “maybe someday” idea: live verification showed Hebrew chat markdown + sidebar titles flipping RTL with the official signed binary intact.
-
-## Quick start — Claude
+## Quick start
 
 ```bash
-git clone https://github.com/Menachem138/desktop-rtl-runtime.git
-cd desktop-rtl-runtime
+git clone https://github.com/Menachem138/rtl-forge.git
+cd rtl-forge
 npm test
 npm run build
-npm run official:launch
-npm run official:watch   # optional re-apply after Claude relaunch/update
 ```
 
-Grant Accessibility once if needed:
-
-```text
-System Settings → Privacy & Security → Accessibility
-```
-
-## Quick start — Codex
+### Claude
 
 ```bash
-npm run build
+npm run official:launch
+npm run official:watch   # auto‑re‑apply after relaunch / update
+```
+
+Grant **Accessibility** once: *System Settings → Privacy & Security → Accessibility*.
+
+### Codex
+
+```bash
 npm run codex:apply
 ```
 
-This **relaunches** Codex with a local debug port (`127.0.0.1`) for the session, then injects the same `payload-v2` in generic mode. Signature stays OpenAI’s.
+Relauches Codex with a **local** debug port for this session.  Signature stays OpenAI's.
 
-Details: [docs/CODEX.md](docs/CODEX.md)
+## How it works
 
-## How Claude inject works
+<p align="center">
+  <img src="assets/social-preview.svg" alt="How RTL Forge works" width="640"/>
+</p>
 
-1. Verify Team ID `Q6L2SF6YDW`
-2. Enable Developer menu
-3. `Developer → Enable Main Process Debugger`
-4. Connect `127.0.0.1:9229`
-5. Inject `dist/payload.js` from `payload-v2/`
-6. Close inspector
+1. Verify the target app is signed by its official Team ID
+2. Open a temporary local debug connection (Claude → built‑in inspector · Codex → Chromium CDP)
+3. Inject `payload-v2` — a **layout‑only** RTL engine
+4. Close the connection (Claude) or leave the port local (Codex)
+
+## payload‑v2
+
+| Principle | What it means |
+|---|---|
+| CSS `unicode‑bidi: plaintext` | Primary prose direction — each block self‑determines |
+| Selective `dir` | Tables / lists / blockquotes only |
+| No text‑node mutation | Copy‑paste &amp; Ctrl‑F return byte‑for‑byte truth |
+| No U+200E / U+200F | Zero bidi control‑character injection |
+| Composers + xterm safe | Hard no‑touch for ProseMirror editors &amp; Claude Code terminals |
+
+Contract: [payload‑v2/CONTRACT.md](payload‑v2/CONTRACT.md)
 
 ## Security model
 
-- No modification of Claude.app / Codex.app on disk  
-- No re-sign  
-- Loopback only  
-- No chat telemetry  
-- Inspectors closed after Claude inject (Codex keeps session debug port by design — local only)  
+- Verify Team ID before injection
+- Loop‑back only (`127.0.0.1`)
+- No chat‑content exfiltration
+- No permanent persistence on disk
+- Inspector closed immediately after Claude inject; Codex debug port stays local for the session
 
-See [SECURITY.md](SECURITY.md) · [docs/IP_AND_PROTECTION.md](docs/IP_AND_PROTECTION.md)
-
-## payload-v2 (original)
-
-- CSS `unicode-bidi: plaintext`  
-- Selective `dir`  
-- **Never mutates text nodes**  
-- No U+200E/U+200F  
-- Composer + xterm hard no-touch  
+→ [SECURITY.md](SECURITY.md) · [docs/IP_AND_PROTECTION.md](docs/IP_AND_PROTECTION.md)
 
 ## Project layout
 
-```text
-assets/             # banner + logo
-official-runtime/   # Claude + generic Electron injectors
-payload-v2/         # original layout-only engine
-manager/            # adapters + control helpers
-docs/               # guides, IP notes, OSS draft
+```
+assets/             banner + logo + social preview
+official‑runtime/   macOS launchers, ensure, watchdog, generic Electron CDP injector
+payload‑v2/         original layout‑only RTL engine
+manager/            menu‑bar helpers + adapter inventory
+docs/               guides, IP notes, OSS draft
 ```
 
 ## Development
@@ -103,18 +100,18 @@ docs/               # guides, IP notes, OSS draft
 ```bash
 npm test
 npm run build
-npm run official:ensure
-npm run codex:apply
+npm run official:ensure     # Claude force re‑apply
+npm run codex:apply         # Codex relaunch + inject
 ```
 
 ## Claude for Open Source
 
-[docs/CLAUDE_FOR_OPEN_SOURCE_APPLICATION_DRAFT.md](docs/CLAUDE_FOR_OPEN_SOURCE_APPLICATION_DRAFT.md)
+This project was submitted for the [Claude for Open Source](https://claude.com/contact-sales/claude‑for‑oss) program.  See the [application draft](docs/CLAUDE_FOR_OPEN_SOURCE_APPLICATION_DRAFT.md).
 
 ## License
 
 MIT © Menachem Samama — [LICENSE](LICENSE) · [NOTICE](NOTICE)
 
 <p align="center">
-  <img src="assets/logo.svg" alt="RTL logo" width="96"/>
+  <img src="assets/logo.svg" alt="RTL Forge logo" width="96"/>
 </p>

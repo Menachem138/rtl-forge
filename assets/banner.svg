@@ -1,43 +1,121 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="Desktop RTL Runtime banner">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="RTL Forge banner">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0B1220"/>
-      <stop offset="55%" stop-color="#121A2F"/>
-      <stop offset="100%" stop-color="#1A1040"/>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#060B18"/>
+      <stop offset="40%" stop-color="#0D1428"/>
+      <stop offset="75%" stop-color="#0F1028"/>
+      <stop offset="100%" stop-color="#0A0818"/>
     </linearGradient>
-    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#4F8CFF"/>
-      <stop offset="100%" stop-color="#8B7CFF"/>
+    <linearGradient id="claudeGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
     </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+    <linearGradient id="codexGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#10A37F"/>
+      <stop offset="100%" stop-color="#34D399"/>
+    </linearGradient>
+    <linearGradient id="hermesGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#A78BFA"/>
+    </linearGradient>
+    <linearGradient id="titleGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#E2E8F0"/>
+      <stop offset="50%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#CBD5E1"/>
+    </linearGradient>
+    <linearGradient id="accentLine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#D97706"/>
+      <stop offset="33%" stop-color="#10A37F"/>
+      <stop offset="66%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#3B82F6"/>
+    </linearGradient>
+    <filter id="glowClaude" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="18" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowCodex" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="14" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowHermes" x="-30%" y="-30%" width="160%" height="160%">
       <feGaussianBlur stdDeviation="12" result="b"/>
-      <feMerge>
-        <feMergeNode in="b"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
   </defs>
-  <rect width="1280" height="640" fill="url(#bg)"/>
-  <circle cx="1040" cy="140" r="180" fill="#4F8CFF" opacity="0.08"/>
-  <circle cx="220" cy="520" r="220" fill="#8B7CFF" opacity="0.08"/>
 
-  <!-- RTL arrow motif -->
-  <g transform="translate(860,210)" filter="url(#glow)">
-    <path d="M40 80 H260" stroke="url(#accent)" stroke-width="10" stroke-linecap="round"/>
-    <path d="M40 80 L90 40" stroke="url(#accent)" stroke-width="10" stroke-linecap="round"/>
-    <path d="M40 80 L90 120" stroke="url(#accent)" stroke-width="10" stroke-linecap="round"/>
-    <rect x="120" y="20" width="180" height="50" rx="14" fill="#1C2540" stroke="#4F8CFF" stroke-opacity="0.5"/>
-    <rect x="150" y="90" width="220" height="50" rx="14" fill="#1C2540" stroke="#8B7CFF" stroke-opacity="0.5"/>
-    <text x="285" y="52" text-anchor="end" fill="#E8EEFF" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="18">שלום · مرحبا</text>
-    <text x="350" y="122" text-anchor="end" fill="#B8C4E6" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="16">Claude · Codex</text>
+  <!-- Background -->
+  <rect width="1280" height="640" fill="url(#bgGrad)"/>
+
+  <!-- Ambient light blobs -->
+  <circle cx="180" cy="120" r="200" fill="#D97706" opacity="0.06"/>
+  <circle cx="640" cy="400" r="250" fill="#10A37F" opacity="0.04"/>
+  <circle cx="1100" cy="180" r="180" fill="#7C3AED" opacity="0.05"/>
+  <circle cx="960" cy="520" r="150" fill="#3B82F6" opacity="0.03"/>
+
+  <!-- Grid pattern -->
+  <g opacity="0.03" stroke="#FFFFFF" stroke-width="0.5">
+    <line x1="0" y1="160" x2="1280" y2="160"/><line x1="0" y1="320" x2="1280" y2="320"/>
+    <line x1="0" y1="480" x2="1280" y2="480"/>
+    <line x1="320" y1="0" x2="320" y2="640"/><line x1="640" y1="0" x2="640" y2="640"/>
+    <line x1="960" y1="0" x2="960" y2="640"/>
   </g>
 
-  <text x="80" y="250" fill="#FFFFFF" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="64" font-weight="700">Desktop RTL Runtime</text>
-  <text x="80" y="320" fill="#B8C4E6" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="28">Official apps · No copy · No re-sign</text>
-  <text x="80" y="380" fill="#8FA0C8" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="22">Hebrew · Arabic · Persian for Claude Desktop &amp; Codex</text>
+  <!-- ===== CLAUDE ICON (left, largest, primary) ===== -->
+  <g transform="translate(140,200)" filter="url(#glowClaude)">
+    <!-- Outer ring -->
+    <circle cx="60" cy="60" r="56" fill="none" stroke="#D97706" stroke-width="2.5" opacity="0.4"/>
+    <!-- Star/compass motif -->
+    <polygon points="60,12 68,44 100,44 74,64 84,96 60,76 36,96 46,64 20,44 52,44" fill="url(#claudeGrad)" opacity="0.85"/>
+    <circle cx="60" cy="56" r="18" fill="#060B18"/>
+    <circle cx="60" cy="56" r="10" fill="url(#claudeGrad)"/>
+  </g>
+  <text x="200" y="290" fill="#D97706" font-family="'Inter','SF Pro Display',-apple-system,sans-serif" font-size="13" font-weight="600" opacity="0.9" letter-spacing="2">CLAUDE</text>
 
-  <rect x="80" y="430" width="210" height="44" rx="22" fill="url(#accent)"/>
-  <text x="185" y="458" text-anchor="middle" fill="#0B1220" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="18" font-weight="700">macOS runtime</text>
-  <rect x="310" y="430" width="180" height="44" rx="22" fill="#1C2540" stroke="#4F8CFF"/>
-  <text x="400" y="458" text-anchor="middle" fill="#E8EEFF" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="18">MIT © Menachem</text>
+  <!-- ===== CODEX ICON (center-left) ===== -->
+  <g transform="translate(380,240)" filter="url(#glowCodex)">
+    <rect x="4" y="4" width="72" height="72" rx="16" fill="none" stroke="#10A37F" stroke-width="2" opacity="0.4"/>
+    <!-- Stylized book/code brackets -->
+    <path d="M24 8 L16 40 L24 72" fill="none" stroke="url(#codexGrad)" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+    <path d="M56 8 L64 40 L56 72" fill="none" stroke="url(#codexGrad)" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+    <text x="40" y="48" text-anchor="middle" fill="url(#codexGrad)" font-family="'Fira Code','JetBrains Mono',monospace" font-size="22" font-weight="700">&lt;/&gt;</text>
+  </g>
+  <text x="420" y="340" fill="#10A37F" font-family="'Inter','SF Pro Display',-apple-system,sans-serif" font-size="13" font-weight="600" opacity="0.9" letter-spacing="2">CODEX</text>
+
+  <!-- ===== HERMES ICON (top-right, smaller) ===== -->
+  <g transform="translate(610,150)" filter="url(#glowHermes)">
+    <!-- Winged messenger stylized -->
+    <path d="M20 80 Q40 20 60 80 Q80 20 100 80" fill="none" stroke="url(#hermesGrad)" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="60" y1="80" x2="60" y2="120" stroke="url(#hermesGrad)" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="60" cy="28" r="6" fill="url(#hermesGrad)" opacity="0.8"/>
+  </g>
+  <text x="632" y="290" fill="#7C3AED" font-family="'Inter','SF Pro Display',-apple-system,sans-serif" font-size="11" font-weight="600" opacity="0.8" letter-spacing="2">HERMES</text>
+
+  <!-- ===== CENTER TYPOGRAPHY ===== -->
+  <g transform="translate(80,380)">
+    <text x="0" y="0" fill="url(#titleGrad)" font-family="'Inter','SF Pro Display',-apple-system,sans-serif" font-size="68" font-weight="800" letter-spacing="-1">RTL FORGE</text>
+    <rect x="0" y="24" width="420" height="4" rx="2" fill="url(#accentLine)" filter="url(#softGlow)"/>
+    <text x="0" y="58" fill="#94A3B8" font-family="'Inter','SF Pro Display',-apple-system,sans-serif" font-size="22" font-weight="400" letter-spacing="0.5">Runtime RTL for official desktop AI apps</text>
+    <text x="0" y="90" fill="#64748B" font-family="'Inter','SF Pro Display',-apple-system,sans-serif" font-size="16" font-weight="400">No copy · No re-sign · Signatures intact</text>
+  </g>
+
+  <!-- ===== HEBREW/ARABIC TEXT (RTL) ===== -->
+  <g transform="translate(980,380)" text-anchor="end">
+    <text x="0" y="0" fill="#CBD5E1" font-family="'Noto Sans Hebrew','Arial Hebrew',sans-serif" font-size="28" font-weight="600" opacity="0.85">עברית · العربية · فارسی</text>
+    <text x="0" y="38" fill="#64748B" font-family="'Noto Sans Hebrew','Arial Hebrew',sans-serif" font-size="16" opacity="0.7">מקצה לקצה, בלי לשבור את החתימה</text>
+  </g>
+
+  <!-- ===== BOTTOM BAR ===== -->
+  <g transform="translate(80,540)">
+    <rect x="0" y="0" width="1120" height="1" rx="1" fill="#1E293B"/>
+    <text x="0" y="28" fill="#475569" font-family="'Inter','SF Pro Display',-apple-system,sans-serif" font-size="13">macOS  ·  MIT © Menachem Samama  ·  github.com/Menachem138/rtl-forge</text>
+    <g transform="translate(1050,-12)">
+      <!-- small RTL arrow -->
+      <path d="M0 12 H40" stroke="#64748B" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M0 12 L12 4 L12 20 Z" fill="#64748B"/>
+    </g>
+  </g>
 </svg>

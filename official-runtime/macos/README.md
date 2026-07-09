@@ -28,7 +28,7 @@ From the repository root:
 ```bash
 npm install
 npm run build
-official-runtime/macos/launch-claude-official-rtl.sh
+official-runtime/macos/launch-rtl-forge.sh
 official-runtime/macos/install-watchdog.sh
 ```
 
@@ -53,7 +53,7 @@ It reinjects only when one of these is true:
 - Claude was restarted.
 - Claude was updated.
 - The current Claude process has not been confirmed recently.
-- You run `ensure-claude-official-rtl.sh --force`.
+- You run `ensure-rtl-forge.sh --force`.
 
 The default periodic confirmation interval is 24 hours:
 

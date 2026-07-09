@@ -18,7 +18,7 @@ Verified approach:
 ## Apply
 
 ```bash
-cd ~/clawd/projects/claude-official-rtl   # or desktop-rtl-runtime after rename
+cd ~/clawd/projects/rtl-forge   # or rtl-forge after rename
 npm run build
 npm run codex:apply
 ```

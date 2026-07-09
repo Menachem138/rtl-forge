@@ -15,7 +15,7 @@ git clone https://github.com/YOUR_USERNAME/claude-desktop-official-rtl.git
 cd claude-desktop-official-rtl
 npm install
 npm run build
-official-runtime/macos/launch-claude-official-rtl.sh
+official-runtime/macos/launch-rtl-forge.sh
 official-runtime/macos/install-watchdog.sh
 ```
 

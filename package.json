@@ -1,5 +1,5 @@
 {
-  "name": "desktop-rtl-runtime",
+  "name": "rtl-forge",
   "version": "0.2.0",
   "private": false,
   "description": "RTL runtime for official Claude Desktop + Codex on macOS \u2014 no copy/patch/re-sign. Original work by Menachem Samama.",
@@ -7,18 +7,18 @@
   "author": "Menachem Samama",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Menachem138/desktop-rtl-runtime.git"
+    "url": "https://github.com/Menachem138/rtl-forge.git"
   },
   "bugs": {
-    "url": "https://github.com/Menachem138/desktop-rtl-runtime/issues"
+    "url": "https://github.com/Menachem138/rtl-forge/issues"
   },
-  "homepage": "https://github.com/Menachem138/desktop-rtl-runtime#readme",
+  "homepage": "https://github.com/Menachem138/rtl-forge#readme",
   "type": "commonjs",
   "scripts": {
     "test": "node --test payload-v2/test/*.test.js manager/__tests__/*.test.js",
     "build": "node payload-v2/build.mjs",
-    "official:launch": "official-runtime/macos/launch-claude-official-rtl.sh",
-    "official:ensure": "official-runtime/macos/ensure-claude-official-rtl.sh --force",
+    "official:launch": "official-runtime/macos/launch-rtl-forge.sh",
+    "official:ensure": "official-runtime/macos/ensure-rtl-forge.sh --force",
     "official:watch": "official-runtime/macos/install-watchdog.sh",
     "official:unwatch": "official-runtime/macos/uninstall-watchdog.sh",
     "manager:build": "manager/gui/build.sh",

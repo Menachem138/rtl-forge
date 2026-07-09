@@ -26,7 +26,7 @@ Use **one** primary app: `/Applications/Hermes.app`.
 ## Apply (experimental)
 
 ```bash
-cd ~/clawd/projects/claude-official-rtl
+cd ~/clawd/projects/rtl-forge
 npm run build
 # Fully quit ALL Hermes windows first (Dock → Quit), then:
 npm run hermes:apply

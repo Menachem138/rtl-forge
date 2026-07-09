@@ -9,13 +9,13 @@
 Repo path:
 
 ```text
-~/clawd/projects/claude-official-rtl
+~/clawd/projects/rtl-forge
 ```
 
 ## 1) Pre-flight (local)
 
 ```bash
-cd ~/clawd/projects/claude-official-rtl
+cd ~/clawd/projects/rtl-forge
 npm test
 npm run build
 ```
@@ -35,8 +35,8 @@ gh auth status
 ## 3) Create + push public repo
 
 ```bash
-cd ~/clawd/projects/claude-official-rtl
-gh repo create Menachem138/claude-official-rtl \
+cd ~/clawd/projects/rtl-forge
+gh repo create Menachem138/rtl-forge \
   --public \
   --source=. \
   --remote=origin \
@@ -47,7 +47,7 @@ gh repo create Menachem138/claude-official-rtl \
 If the repo already exists empty on GitHub:
 
 ```bash
-git remote add origin https://github.com/Menachem138/claude-official-rtl.git
+git remote add origin https://github.com/Menachem138/rtl-forge.git
 git push -u origin main
 ```
 

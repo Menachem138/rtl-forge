@@ -6,8 +6,8 @@
 ## Clean product repository
 
 ```text
-~/clawd/projects/claude-official-rtl
-remote: origin → https://github.com/Menachem138/claude-official-rtl.git
+~/clawd/projects/rtl-forge
+remote: origin → https://github.com/Menachem138/rtl-forge.git
 ```
 
 - Only remote is **your** GitHub repo.
