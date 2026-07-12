@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.png" alt="RTL Forge — Runtime RTL for official desktop AI apps" width="100%"/>
+  <img src="assets/banner.jpg" alt="RTL Forge — Runtime RTL for official desktop AI apps" width="100%"/>
 </p>
 
 <hr/>
