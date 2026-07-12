@@ -1,15 +1,27 @@
 # Hermes Desktop RTL
 
-## Reality check
+## Status: supported (one command)
 
-Hermes Desktop is **harder** than Claude/Codex for external RTL injection:
+Hermes RTL works reliably at runtime — no source patch, no copy, no re-sign. Verified live:
+Hebrew flips RTL across the app including the sidebar conversation titles (hundreds of
+`dir="rtl"` / `.ortl-leaf` elements in one apply).
 
-1. Multiple installs can run at once (`/Applications/Hermes.app`, old `*.backup*`, `~/.hermes/.../release`).
-2. Electron single-instance handoff drops `--remote-debugging-port`.
-3. Hermes UI CSS hard-sets `unicode-bidi: isolate` + `direction: ltr` on many text nodes.
-4. Force-quitting Hermes mid-session can break the **background agent** → "Repair install" / backend timeout.
+```bash
+npm run hermes:apply     # or: Apply on the Hermes card in the RTL Manager menu-bar app
+```
 
-**Recommendation:** treat Hermes RTL as best fixed **in Hermes source** (the app already has bidi/RTL pieces). CDP inject is experimental polish only.
+Hermes used to be the hard one, and the apply script now handles what made it hard, automatically:
+
+1. **Multiple installs** (`/Applications/Hermes.app`, old `*.backup*`, `~/.hermes/.../release`) —
+   the script quits *every* Hermes instance by exact process name and waits for the single-instance
+   lock to clear, retrying up to 3× so a stale install can't steal the debug-port handoff.
+2. **Single-instance handoff** dropping `--remote-debugging-port` — covered by the quit-all + retry.
+3. **Hermes hard-sets `unicode-bidi: isolate` + `direction: ltr`** — the generic payload beats it on
+   chat text hosts with a targeted `!important`, without flipping app chrome (English stays LTR).
+
+**One honest caveat remains:** applying relaunches the Hermes window, which briefly restarts the UI.
+If the background agent shows "Repair install" / a backend timeout afterwards, restart the Hermes
+agent from Terminal or use the app's **Repair install** — the RTL inject itself changes nothing on disk.
 
 ## Cleanup if you see two Hermes icons
 

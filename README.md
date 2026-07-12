@@ -24,7 +24,7 @@
 |---|---|---|---|
 | **Claude Desktop** macOS | Anthropic `Q6L2SF6YDW` | Transient Developer-debugger runtime inject | ✅ Supported |
 | **Codex Desktop** macOS | OpenAI `2DC432GLL2` | Opt‑in relaunch + CDP runtime inject | ✅ Supported |
-| Hermes Desktop macOS | ad‑hoc | Deferred — prefer source‑level fix | 🔮 Research |
+| **Hermes Desktop** macOS | ad‑hoc | One‑command relaunch + CDP runtime inject | ✅ Supported |
 
 ## Quick start
 
