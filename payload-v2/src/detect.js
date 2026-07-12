@@ -39,19 +39,6 @@ function isLtrLetterCodePoint(cp) {
   return false;
 }
 
-function isNeutralOrWeak(cp) {
-  // digits, punctuation, whitespace, symbols — not strong letters
-  if (cp <= 0x40) return true;
-  if (cp >= 0x5b && cp <= 0x60) return true;
-  if (cp >= 0x7b && cp <= 0xbf) return true;
-  if (cp >= 0x30 && cp <= 0x39) return true;
-  // general punctuation blocks
-  if (cp >= 0x2000 && cp <= 0x206f) return true;
-  if (cp >= 0x20a0 && cp <= 0x20cf) return true;
-  if (cp >= 0x2100 && cp <= 0x214f) return true;
-  return false;
-}
-
 /**
  * Count strong LTR vs RTL letters in a string (code-point safe).
  */

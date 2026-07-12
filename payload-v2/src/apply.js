@@ -208,18 +208,56 @@ function createController(doc, deps) {
     (globalThis.__CLAUDE_RTL_GENERIC__ === true ||
       (typeof window !== 'undefined' && window.__CLAUDE_RTL_GENERIC__ === true));
 
+  let pending = new Set(); // changed subtrees to reprocess on the next tick
+  let fullPending = false; // fall back to a whole-document sweep this tick
+
+  // Full sweep — de-duped so <body> isn't processed twice when it is already a scan root.
   function scan() {
     const roots = surfaces.getScanRoots(doc, generic);
-    for (const r of roots) processRoot(r, detect, surfaces, generic);
-    if (doc.body) processRoot(doc.body, detect, surfaces, generic);
+    const seen = new Set();
+    for (const r of roots) {
+      if (r && r.nodeType === 1 && !seen.has(r)) {
+        seen.add(r);
+        processRoot(r, detect, surfaces, generic);
+      }
+    }
+    if (doc.body && !seen.has(doc.body)) processRoot(doc.body, detect, surfaces, generic);
+  }
+
+  // Reduce a mutation to the element whose querySelectorAll covers the change, so streaming
+  // (which reflows one leaf at a time) reprocesses that small subtree instead of the whole doc.
+  function enqueue(m) {
+    if (m.type === 'characterData') {
+      const leaf = m.target && m.target.parentNode; // element holding the changed text
+      const container = (leaf && leaf.parentNode) || leaf; // its parent → querySelectorAll finds the leaf
+      if (container && container.nodeType === 1) pending.add(container);
+      else fullPending = true;
+    } else if (m.target && m.target.nodeType === 1) {
+      pending.add(m.target); // childList: added nodes are descendants of the target
+    } else {
+      fullPending = true;
+    }
+  }
+
+  function flush() {
+    scheduled = null;
+    const targets = pending;
+    const full = fullPending;
+    pending = new Set();
+    fullPending = false;
+    // Safety valve: a whole-body change or a huge burst is cheaper as one full sweep.
+    if (full || (doc.body && targets.has(doc.body)) || targets.size > 40) {
+      scan();
+      return;
+    }
+    for (const el of targets) {
+      if (el && el.nodeType === 1) processRoot(el, detect, surfaces, generic);
+    }
   }
 
   function schedule() {
     if (scheduled) return;
-    scheduled = (doc.defaultView || globalThis).setTimeout(() => {
-      scheduled = null;
-      scan();
-    }, 48);
+    scheduled = (doc.defaultView || globalThis).setTimeout(flush, 48);
   }
 
   function start() {
@@ -227,9 +265,12 @@ function createController(doc, deps) {
     doc.documentElement.setAttribute(ROOT_ATTR, 'v2');
     doc.documentElement.setAttribute('data-ortl-payload', PAYLOAD_NAME);
     if (generic) doc.documentElement.setAttribute('data-ortl-generic', '1');
-    scan();
+    scan(); // initial pass stays a full sweep
     if (typeof MutationObserver !== 'undefined') {
-      observer = new MutationObserver(() => schedule());
+      observer = new MutationObserver((mutations) => {
+        for (const m of mutations) enqueue(m);
+        schedule();
+      });
       observer.observe(doc.documentElement, {
         subtree: true,
         childList: true,
@@ -249,6 +290,8 @@ function createController(doc, deps) {
       }
       scheduled = null;
     }
+    pending = new Set();
+    fullPending = false;
   }
 
   return { start, dispose, scan, processRoot: (r) => processRoot(r, detect, surfaces, generic) };
