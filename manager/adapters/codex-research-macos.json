@@ -1,17 +1,17 @@
 {
   "id": "codex-research-macos",
-  "name": "Codex Desktop",
+  "name": "Codex (inside ChatGPT)",
   "platform": "macos",
   "bundleId": "com.openai.codex",
-  "defaultPath": "/Applications/Codex.app",
+  "defaultPath": "/Applications/ChatGPT.app",
   "status": "supported",
   "safeRoute": "electron-remote-debugging-cdp",
   "apply": "electron-cdp",
   "teamId": "2DC432GLL2",
   "notes": [
-    "Breakthrough path: relaunch OpenAI's signed Codex with --remote-debugging-port and inject payload-v2 in generic mode — no copy/patch/re-sign.",
-    "Verified live: Hebrew chat markdown paragraphs + sidebar leaf titles render RTL (unicode-bidi plaintext / dir=rtl).",
-    "Opt-in: apply relaunches Codex and keeps a local debug port on 127.0.0.1 for the session.",
-    "Signature and notarization stay intact (runtime inject only)."
+    "Codex is now embedded inside ChatGPT.app as 'Codex Framework'.",
+    "We target the main ChatGPT.app bundle (bundle ID com.openai.codex).",
+    "RTL injection works for Codex chat mode without re-signing.",
+    "Note: Relaunching affects the whole ChatGPT.app (regular chat + Codex)."
   ]
 }

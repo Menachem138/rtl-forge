@@ -23,7 +23,7 @@
     "official:unwatch": "official-runtime/macos/uninstall-watchdog.sh",
     "manager:build": "manager/gui/build.sh",
     "manager:status": "manager/core/app-status.sh",
-    "codex:apply": "official-runtime/macos/apply-electron-rtl.sh /Applications/Codex.app auto codex-research-macos",
+    "codex:apply": "official-runtime/macos/apply-electron-rtl.sh /Applications/ChatGPT.app auto codex-research-macos",
     "hermes:apply": "official-runtime/macos/apply-electron-rtl.sh /Applications/Hermes.app auto hermes-electron-macos"
   },
   "engines": {
