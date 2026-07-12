@@ -48,35 +48,43 @@ EXEC_NAME="$(defaults read "$APP/Contents/Info" CFBundleExecutable 2>/dev/null |
 BIN="$APP/Contents/MacOS/$EXEC_NAME"
 [[ -x "$BIN" ]] || { log "executable not found: $BIN"; exit 1; }
 
-# 1) Quit the app (matched by its exact bundle path). Also clear same-named
-# helpers/orphans so Electron single-instance cannot hand off to a non-debug process.
-log "quitting ${EXEC_NAME}..."
-pkill -f "$APP/Contents/MacOS/" 2>/dev/null || true
-pkill -f "$APP/Contents/Frameworks/" 2>/dev/null || true
-# Hermes (and similar) may leave sibling installs running under other paths — kill by executable name last.
-if [[ "$EXEC_NAME" == "Hermes" ]]; then
-  pkill -f '/MacOS/Hermes$' 2>/dev/null || true
-  pkill -f 'Hermes Helper' 2>/dev/null || true
-fi
-for _ in $(seq 1 60); do
-  pgrep -f "$APP/Contents/MacOS/" >/dev/null 2>&1 || break
-  sleep 0.5
-done
-sleep 1
+# Quit EVERY instance of this app (SIGTERM = graceful, so background agents get to clean up).
+# Electron's single-instance lock is keyed by bundle id, not path, so a stale/sibling install
+# (Hermes.app.backup-*, ~/.hermes/.../release, an old copy) will steal a relaunch's handoff and
+# the debug switch is lost. Killing by EXACT process name catches them all, wherever they live.
+quit_all() {
+  pkill -f "$APP/Contents/MacOS/" 2>/dev/null || true
+  pkill -f "$APP/Contents/Frameworks/" 2>/dev/null || true
+  pkill -x "$EXEC_NAME" 2>/dev/null || true
+  pkill -f "$EXEC_NAME Helper" 2>/dev/null || true
+}
+all_gone() { ! pgrep -x "$EXEC_NAME" >/dev/null 2>&1; }
 
-# 2) Relaunch with the Chromium remote-debugging endpoint (direct exec passes switches reliably).
-log "relaunching with --remote-debugging-port=${PORT} (127.0.0.1)..."
-nohup "$BIN" --remote-debugging-port="$PORT" --remote-allow-origins='*' >/dev/null 2>&1 &
-disown 2>/dev/null || true
+# One attempt: quit everything, wait for the single-instance lock to clear, relaunch with the
+# debug port, wait for the endpoint. Returns 0 if the port opened.
+attempt_relaunch() {
+  quit_all
+  for _ in $(seq 1 60); do all_gone && break; sleep 0.5; done
+  sleep 1   # let the userData single-instance lock file release
+  log "relaunching with --remote-debugging-port=${PORT} (127.0.0.1)..."
+  nohup "$BIN" --remote-debugging-port="$PORT" --remote-allow-origins='*' >/dev/null 2>&1 &
+  disown 2>/dev/null || true
+  for _ in $(seq 1 60); do
+    curl -fsS --max-time 1 "http://127.0.0.1:$PORT/json/version" >/dev/null 2>&1 && return 0
+    sleep 0.5
+  done
+  return 1
+}
 
-# 3) Wait for the debug endpoint to answer.
+# 1-3) Quit + relaunch + wait, retrying once if a handoff swallowed the debug switch.
+log "quitting all ${EXEC_NAME} instances..."
 ready=""
-for _ in $(seq 1 80); do
-  if curl -fsS --max-time 1 "http://127.0.0.1:$PORT/json/version" >/dev/null 2>&1; then ready=1; break; fi
-  sleep 0.5
+for try in 1 2 3; do
+  if attempt_relaunch; then ready=1; break; fi
+  log "debug port didn't open (attempt ${try}/3) — a stale instance likely stole the handoff; retrying..."
 done
 if [[ -z "$ready" ]]; then
-  log "debug endpoint never opened on 127.0.0.1:$PORT — this app strips the switch (hardened/guarded build)."
+  log "debug endpoint never opened on 127.0.0.1:$PORT after 3 tries. Fully quit ${EXEC_NAME} from the Dock and retry, or this build strips the switch."
   echo "applied=fail"
   exit 4
 fi

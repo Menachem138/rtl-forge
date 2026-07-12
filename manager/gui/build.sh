@@ -10,7 +10,7 @@ REPO="$(cd "$SCRIPT_DIR/../.." && pwd)"
 cd "$SCRIPT_DIR"
 
 echo "manager: building payload (one-time, needs Node)..."
-( cd "$REPO" && node build/build-payload.js >/dev/null )
+( cd "$REPO" && npm run build >/dev/null )
 
 echo "manager: compiling the Swift app..."
 swift build -c release
@@ -33,7 +33,7 @@ cp -R "$REPO/official-runtime/macos" "$RES/official-runtime/macos"
 cp    "$REPO/dist/payload.js"  "$RES/dist/payload.js"
 chmod +x "$RES/manager/core/"*.sh "$RES/official-runtime/macos/"*.sh 2>/dev/null || true
 
-VERSION="$(tr -d ' \t\n' < "$REPO/VERSION" 2>/dev/null || echo 0.0.0)"
+VERSION="$(node -p "require('$REPO/package.json').version" 2>/dev/null || echo 0.0.0)"
 cat > "$APP/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "https://www.apple.com/DTDs/PropertyList-1.0.dtd">
