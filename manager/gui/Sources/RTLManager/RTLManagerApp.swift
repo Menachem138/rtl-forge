@@ -10,10 +10,26 @@ struct RTLManagerApp: App {
             ContentView(runner: runner)
                 .task { await runner.refresh() }
         } label: {
-            Image(systemName: "text.alignright")
+            Image(nsImage: Self.statusIcon)
         }
         .menuBarExtraStyle(.window)
     }
+
+    // RTL Forge brand glyph (leftward chevrons). isTemplate → monochrome, adapts to the menu bar.
+    private static let statusIcon: NSImage = {
+        let img = bundledNSImage("rtl-forge-statusTemplate")
+        img.isTemplate = true
+        img.size = NSSize(width: 20, height: 18)
+        return img
+    }()
+}
+
+// Load a loose bundle PNG as NSImage (named handles @2x; URL fallback; empty image last resort).
+func bundledNSImage(_ name: String) -> NSImage {
+    NSImage(named: name)
+        ?? Bundle.main.url(forResource: name, withExtension: "png").flatMap { NSImage(contentsOf: $0) }
+        ?? NSImage(systemSymbolName: "text.alignright", accessibilityDescription: nil)
+        ?? NSImage()
 }
 
 // MARK: - Brand styling (matches the copy-patch gui/ app: warm terracotta, never neon-orange)

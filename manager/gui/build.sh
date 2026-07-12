@@ -33,6 +33,10 @@ cp -R "$REPO/official-runtime/macos" "$RES/official-runtime/macos"
 cp    "$REPO/dist/payload.js"  "$RES/dist/payload.js"
 chmod +x "$RES/manager/core/"*.sh "$RES/official-runtime/macos/"*.sh 2>/dev/null || true
 
+# App icon (Finder / Cmd-Tab) + menu-bar status glyph (template PNGs adapt to light/dark).
+cp "$SCRIPT_DIR/icon/AppIcon.icns" "$RES/AppIcon.icns"
+cp "$SCRIPT_DIR/assets/rtl-forge-statusTemplate.png" "$SCRIPT_DIR/assets/rtl-forge-statusTemplate@2x.png" "$RES/"
+
 VERSION="$(node -p "require('$REPO/package.json').version" 2>/dev/null || echo 0.0.0)"
 cat > "$APP/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -43,6 +47,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
   <key>CFBundleDisplayName</key><string>Claude RTL Manager</string>
   <key>CFBundleIdentifier</key><string>com.claude-rtl.manager.adapters</string>
   <key>CFBundleExecutable</key><string>RTLManager</string>
+  <key>CFBundleIconFile</key><string>AppIcon</string>
   <key>CFBundlePackageType</key><string>APPL</string>
   <key>CFBundleShortVersionString</key><string>${VERSION}</string>
   <key>CFBundleVersion</key><string>1</string>

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner-hf.png" alt="RTL Forge — Runtime RTL for official desktop AI apps" width="100%"/>
+  <img src="assets/banner.png" alt="RTL Forge — Runtime RTL for official desktop AI apps" width="100%"/>
 </p>
 
 <hr/>
@@ -55,7 +55,7 @@ Relauches Codex with a **local** debug port for this session.  Signature stays O
 ## How it works
 
 <p align="center">
-  <img src="assets/social-preview.svg" alt="How RTL Forge works" width="640"/>
+  <img src="assets/how-it-works.png" alt="How RTL Forge works" width="820"/>
 </p>
 
 1. Verify the target app is signed by its official Team ID
